@@ -65,6 +65,8 @@ class Spelleider{
         } 
 
         private function winnen($laatsteKaart){
+            if ($laatsteKaart === null) return false;
+
             // hoeveel kaarten heeft huidige speler?
             $aantal = count($this->Spelers[$this->beurt]->Kaarten);
 
@@ -88,6 +90,7 @@ class Spelleider{
 
         return false;
     }
+
     
     private function speelKaart($kaartid){
         
@@ -130,6 +133,7 @@ class Spelleider{
                 // take one random card from each player
                 for ($i = 0; $i < $aantalSpelers; $i++) {
                     if (count($this->Spelers[$i]->Kaarten) > 0) {
+                    if ($i === $this->beurt) continue; // skip current player
                         $rand = array_rand($this->Spelers[$i]->Kaarten);
                         $doorgegevenKaarten[$i] = $this->Spelers[$i]->VerwijderVanHand($rand);
                     }

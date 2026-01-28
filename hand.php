@@ -54,16 +54,4 @@ class Hand {
         }
     }
 
-    //voor 10-wasmachine
-    public function heeftKaarten() {
-        return count($this->Kaarten) > 0;
-    }
-
-    public function verwijderWillekeurigeKaart() {
-        if (empty($this->Kaarten)) {
-            return null;
-        }
-        $randomKey = array_rand($this->Kaarten);
-        return $this->VerwijderVanHand($randomKey);
-    }
 }
