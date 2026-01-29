@@ -126,23 +126,7 @@ class Spelleider{
                 $this->volgendeSpeler();
                 break;
             case '10':
-                // tien-wasmachine
-                $aantalSpelers = count($this->Spelers);
-                $doorgegevenKaarten = [];
-                
-                // take one random card from each player
-                for ($i = 0; $i < $aantalSpelers; $i++) {
-                    if (count($this->Spelers[$i]->Kaarten) > 0) {
-                    if ($i === $this->beurt) continue; // skip current player
-                        $rand = array_rand($this->Spelers[$i]->Kaarten);
-                        $doorgegevenKaarten[$i] = $this->Spelers[$i]->VerwijderVanHand($rand);
-                    }
-                }
-                // give the card to the player on the right
-                foreach ($doorgegevenKaarten as $van => $kaart) {
-                    $naar = $this->spelerRechtsVan($van);
-                    $this->Spelers[$naar]->ToevoegenAanHand($kaart);
-                }
+                $this->kaartenDraaien();
                 $this->volgendeSpeler();
                 break;
             case 'A':
@@ -166,6 +150,24 @@ class Spelleider{
             
             $this->Aflegstapel->PlaatsKaart($kaart);
         }
+
+        private function kaartenDraaien(){
+            $doorgeef = [];
+        
+            foreach ($this->Spelers as $index => $hand) {
+                if ($hand->heeftKaarten()) {
+                    $kaart = $hand->verwijderWillekeurigeKaart();
+                    if ($kaart !== null) {
+                        $doorgeef[$index] = $kaart;
+                    }
+                }
+            }
+        
+            foreach ($doorgeef as $vanIndex => $kaart) {
+                $naarIndex = $this->spelerRechtsVan($vanIndex);
+                $this->Spelers[$naarIndex]->ToevoegenAanHand($kaart);
+            }
+        }    
     
     private function spelerRechtsVan($index) {
         if ($this->LR) {
