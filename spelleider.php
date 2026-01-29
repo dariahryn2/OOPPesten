@@ -64,31 +64,12 @@ class Spelleider{
             echo "</tafel>"; 
         } 
 
-        private function winnen($laatsteKaart){
-            if ($laatsteKaart === null) return false;
-
-            // hoeveel kaarten heeft huidige speler?
-            $aantal = count($this->Spelers[$this->beurt]->Kaarten);
-
-            // speler heeft GEEN kaarten meer → mogelijk gewonnen
-            if ($aantal === 0) {
-
-            // pestkaarten
-            $pestkaarten = ['2', '8', '10', 'J', 'K', 'A', 'X'];
-
-            // laatste kaart was pestkaart → straf
-            if (in_array($laatsteKaart->GetWaarde(), $pestkaarten)) {
-                $this->kaartPakken();
-                $this->kaartPakken();
-                return false;
+        private function winnen(){
+            if (count($this->Spelers[$this->beurt]->Kaarten) === 0) {
+                $this->winnaar = $this->beurt;
+                return true;
             }
-
-            // echte winnaar
-            $this->winnaar = $this->beurt;
-            return true;
-        }
-
-        return false;
+            return false;
     }
 
     
@@ -109,10 +90,22 @@ class Spelleider{
         }
         
         $kaart = $this->Spelers[$this->beurt]->VerwijderVanHand($kaartid);
-        // check win immediately
-        if ($this->winnen($kaart)) {
+
+        if ($this->winnen()) {
             $this->Aflegstapel->PlaatsKaart($kaart);
             return;
+        }
+
+        //pestkaart as last card
+        $pestkaarten = ['2', '8', '10', 'J', 'K', 'A', 'X'];
+        
+        if (count($this->Spelers[$this->beurt]->Kaarten) === 1) {
+            $laatsteKaart = $this->Spelers[$this->beurt]->Kaarten[0];
+        
+            if (in_array($laatsteKaart->GetWaarde(), $pestkaarten)) {
+                $this->kaartPakken();
+                $this->kaartPakken();
+            }
         }
         
         switch ($kaart->GetWaarde()) {
@@ -149,6 +142,7 @@ class Spelleider{
             }
             
             $this->Aflegstapel->PlaatsKaart($kaart);
+
         }
 
         private function kaartenDraaien(){
