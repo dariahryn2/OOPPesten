@@ -10,7 +10,7 @@
         header("location:Index.php");
     }
 
-    $aantalSpelers = 2; 
+    $aantalSpelers = 3; 
 
     if(isset($_SESSION['Game'])){
         $Game = $_SESSION['Game'];
